@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Oscars 2026 Market Dashboard</title>
+    <meta name="description" content="Live Polymarket pricing across all 24 Oscar award categories.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="page-shell">
+        <header class="hero">
+            <div class="hero-copy">
+                <p class="eyebrow">Polymarket x Oscars 2026</p>
+                <h1>Every Oscar race, in one editorial dashboard.</h1>
+                <p class="hero-text">
+                    A static dashboard for all 24 Oscar categories, built from the live Polymarket nominee markets.
+                    Each card shows the current nominee board, best bid and ask, and race-level volume.
+                </p>
+            </div>
+            <div class="hero-aside">
+                <div class="status-card">
+                    <span class="status-label">Data snapshot</span>
+                    <strong id="hero-updated">Loading...</strong>
+                    <span class="status-note">Yes price is used here as the live implied probability.</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="metrics" aria-label="Summary">
+            <article class="metric-card">
+                <span class="metric-label">Award categories</span>
+                <strong class="metric-value" id="metric-categories">--</strong>
+            </article>
+            <article class="metric-card">
+                <span class="metric-label">Live nominee lines</span>
+                <strong class="metric-value" id="metric-nominees">--</strong>
+            </article>
+            <article class="metric-card">
+                <span class="metric-label">24h market volume</span>
+                <strong class="metric-value" id="metric-volume">--</strong>
+            </article>
+            <article class="metric-card">
+                <span class="metric-label">Strongest leader</span>
+                <strong class="metric-value metric-value-small" id="metric-leader">--</strong>
+            </article>
+        </section>
+
+        <section class="strip-section" aria-labelledby="front-runners-title">
+            <div class="section-heading">
+                <div>
+                    <p class="section-kicker">Snapshot</p>
+                    <h2 id="front-runners-title">Front-runner board</h2>
+                </div>
+                <p class="section-note">The current leader in each category, ranked by confidence.</p>
+            </div>
+            <div class="front-runner-strip" id="front-runner-strip"></div>
+        </section>
+
+        <section class="controls-shell" aria-label="Dashboard controls">
+            <div class="control-panel">
+                <label class="control-field">
+                    <span>Search</span>
+                    <input id="category-search" type="search" placeholder="Search categories or nominees">
+                </label>
+                <label class="control-field control-field-select">
+                    <span>Sort</span>
+                    <select id="category-sort">
+                        <option value="confidence">Highest confidence</option>
+                        <option value="volume">Highest 24h volume</option>
+                        <option value="tightest">Tightest races</option>
+                        <option value="alphabetical">Alphabetical</option>
+                    </select>
+                </label>
+            </div>
+            <div class="pill-list" id="category-pills"></div>
+        </section>
+
+        <section class="grid-section" aria-labelledby="categories-title">
+            <div class="section-heading">
+                <div>
+                    <p class="section-kicker">All markets</p>
+                    <h2 id="categories-title">Category boards</h2>
+                </div>
+                <p class="section-note" id="results-summary">Loading categories...</p>
+            </div>
+            <div class="category-grid" id="category-grid"></div>
+        </section>
+    </div>
+
+    <template id="empty-state-template">
+        <article class="empty-state">
+            <h3>No categories match this filter.</h3>
+            <p>Try a broader search or switch the sorting mode.</p>
+        </article>
+    </template>
+
+    <script src="app.js" defer></script>
+</body>
+</html>
