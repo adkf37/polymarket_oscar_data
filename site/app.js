@@ -59,7 +59,6 @@ function render() {
     const filteredCategories = getFilteredCategories(payload.categories);
 
     renderSummary(payload);
-    renderFrontRunnerStrip(payload.summary.frontrunners);
     renderCategoryPills(filteredCategories);
     renderResultsSummary(filteredCategories.length, payload.summary.categoryCount);
     renderCategories(filteredCategories);
@@ -104,31 +103,7 @@ function compareCategories(left, right, sortMode) {
 }
 
 function renderSummary(payload) {
-    const topLeader = payload.summary.frontrunners[0];
-
-    document.querySelector("#metric-categories").textContent = String(payload.summary.categoryCount);
-    document.querySelector("#metric-nominees").textContent = String(payload.summary.nomineeCount);
-    document.querySelector("#metric-volume").textContent = formatCurrency(payload.summary.totalVolume24hr);
-    document.querySelector("#metric-leader").textContent = `${topLeader.nominee} in ${topLeader.category} (${formatPercent(topLeader.yesPrice)})`;
     document.querySelector("#hero-updated").textContent = formatDateTime(payload.fetchedAt);
-}
-
-function renderFrontRunnerStrip(frontrunners) {
-    const container = document.querySelector("#front-runner-strip");
-
-    container.innerHTML = frontrunners
-        .map((leader) => {
-            const targetId = createAnchorId(leader.category);
-
-            return `
-                <a class="runner-chip" href="#${targetId}">
-                    <span class="runner-chip-category">${escapeHtml(leader.category)}</span>
-                    <span class="runner-chip-name">${escapeHtml(leader.nominee)}</span>
-                    <span class="runner-chip-price">${formatPercent(leader.yesPrice)}</span>
-                </a>
-            `;
-        })
-        .join("");
 }
 
 function renderCategoryPills(categories) {
@@ -138,7 +113,6 @@ function renderCategoryPills(categories) {
         .map((category) => `
             <a class="pill-link" href="#${createAnchorId(category.category)}">
                 <span>${escapeHtml(category.category)}</span>
-                <span class="pill-count">${category.nomineeCount}</span>
             </a>
         `)
         .join("");
@@ -172,49 +146,58 @@ function renderCategoryCard(category, index) {
     const leaderGap = getLeaderGap(category);
     const raceClass = getConfidenceClass(category.leader.yesPrice);
     const raceLabel = getConfidenceLabel(category.leader.yesPrice);
+    const previewCount = getPreviewNomineeCount(category);
+    const previewNominees = category.nominees.slice(0, previewCount);
+    const overflowNominees = category.nominees.slice(previewCount);
 
     return `
         <article class="category-card" id="${createAnchorId(category.category)}" style="--card-index: ${index};">
             <header class="category-header">
-                <div>
+                <div class="category-heading">
                     <p class="section-kicker">Oscar category</p>
                     <h3 class="category-title">${escapeHtml(category.category)}</h3>
                 </div>
-                <a class="category-link" href="${escapeHtml(category.eventUrl)}" target="_blank" rel="noreferrer">Open market</a>
-            </header>
-
-            <div class="category-summary">
-                <div class="leader-block">
-                    <span class="leader-label">Front-runner</span>
-                    <span class="leader-name">${escapeHtml(category.leader.nominee)}</span>
-                    <span class="leader-price">${formatPercent(category.leader.yesPrice)}</span>
-                    <p class="leader-gap">Lead over #2: ${formatPercent(leaderGap)}</p>
+                <div class="category-meta">
                     <span class="confidence-pill ${raceClass}">${raceLabel}</span>
                 </div>
+            </header>
 
-                <div class="detail-grid">
-                    <div class="detail-card">
-                        <span class="detail-label">Nominees</span>
-                        <strong class="detail-value">${category.nomineeCount}</strong>
+            <div class="compact-summary">
+                <div class="leader-inline">
+                    <div class="leader-copy">
+                        <span class="leader-label">Front-runner</span>
+                        <span class="leader-name">${escapeHtml(category.leader.nominee)}</span>
                     </div>
-                    <div class="detail-card">
-                        <span class="detail-label">24h volume</span>
-                        <strong class="detail-value">${formatCurrency(category.totalVolume24hr)}</strong>
+                    <span class="leader-price">${formatPercent(category.leader.yesPrice)}</span>
+                </div>
+                <div class="stat-rail">
+                    <div class="stat-chip">
+                        <span class="stat-chip-label">Lead</span>
+                        <strong>${formatPercent(leaderGap)}</strong>
                     </div>
-                    <div class="detail-card">
-                        <span class="detail-label">Total volume</span>
-                        <strong class="detail-value">${formatCurrency(category.totalVolume)}</strong>
+                    <div class="stat-chip">
+                        <span class="stat-chip-label">24h</span>
+                        <strong>${formatCurrency(category.totalVolume24hr)}</strong>
                     </div>
-                    <div class="detail-card">
-                        <span class="detail-label">Top ask</span>
-                        <strong class="detail-value">${formatPercent(category.leader.bestAsk)}</strong>
+                    <div class="stat-chip">
+                        <span class="stat-chip-label">Total</span>
+                        <strong>${formatCurrency(category.totalVolume)}</strong>
                     </div>
                 </div>
             </div>
 
             <ol class="nominee-list">
-                ${category.nominees.map((nominee, nomineeIndex) => renderNomineeRow(nominee, nomineeIndex)).join("")}
+                ${previewNominees.map((nominee, nomineeIndex) => renderNomineeRow(nominee, nomineeIndex)).join("")}
             </ol>
+
+            ${overflowNominees.length ? `
+                <details class="nominee-details">
+                    <summary>Show ${overflowNominees.length} more nominees</summary>
+                    <ol class="nominee-list nominee-list-extra">
+                        ${overflowNominees.map((nominee, nomineeIndex) => renderNomineeRow(nominee, nomineeIndex + previewCount)).join("")}
+                    </ol>
+                </details>
+            ` : ""}
         </article>
     `;
 }
@@ -233,20 +216,13 @@ function renderNomineeRow(nominee, nomineeIndex) {
                 <div class="bar-track">
                     <div class="bar-fill" style="width: ${barWidth}%;"></div>
                 </div>
-                <div class="row-meta">
-                    <span>Bid ${formatPercent(nominee.bestBid)}</span>
-                    <span>Ask ${formatPercent(nominee.bestAsk)}</span>
-                    <span>24h ${formatCurrency(nominee.volume24hr)}</span>
-                </div>
             </div>
         </li>
     `;
 }
 
 function renderError(error) {
-    document.querySelector("#hero-updated").textContent = "Unable to load data";
-    document.querySelector("#metric-leader").textContent = "Dashboard data unavailable";
-    document.querySelector("#front-runner-strip").innerHTML = "";
+    document.querySelector("#hero-updated").textContent = "unavailable";
     document.querySelector("#category-pills").innerHTML = "";
     document.querySelector("#results-summary").textContent = error.message;
     document.querySelector("#category-grid").innerHTML = `
@@ -263,6 +239,14 @@ function getLeaderGap(category) {
     }
 
     return category.nominees[0].yesPrice - category.nominees[1].yesPrice;
+}
+
+function getPreviewNomineeCount(category) {
+    if (category.category === "Best Picture") {
+        return Math.min(4, category.nominees.length);
+    }
+
+    return Math.min(3, category.nominees.length);
 }
 
 function getConfidenceClass(value) {
