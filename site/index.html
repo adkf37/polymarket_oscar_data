@@ -13,36 +13,38 @@
 <body>
     <div class="page-shell">
         <header class="hero">
-            <div class="hero-copy hero-copy-compact">
-                <div class="hero-topline">
-                    <p class="eyebrow">Polymarket x Oscars 2026</p>
+            <div class="hero-layout">
+                <div class="hero-copy hero-copy-compact">
+                    <div class="hero-topline">
+                        <p class="eyebrow">Polymarket x Oscars 2026</p>
+                        
+                    </div>
+                    <h1>Oscar market board</h1>
+                    <p class="hero-text hero-text-compact">
+                        Live category leaders and nominee boards across all 24 Oscar races.
+                    </p>
                     <p class="hero-updated-inline">Updated <span id="hero-updated">Loading...</span></p>
                 </div>
-                <h1>Oscar market board</h1>
-                <p class="hero-text hero-text-compact">
-                    Live category leaders and nominee boards across all 24 Oscar races.
-                </p>
+
+                <aside class="hero-controls" aria-label="Dashboard controls">
+                    <div class="hero-controls-shell">
+                        <label class="control-field">
+                            <span>Search</span>
+                            <input id="category-search" type="search" placeholder="Search categories or nominees">
+                        </label>
+                        <label class="control-field control-field-select">
+                            <span>Sort</span>
+                            <select id="category-sort">
+                                <option value="confidence">Highest confidence</option>
+                                <option value="volume">Highest 24h volume</option>
+                                <option value="tightest">Tightest races</option>
+                                <option value="alphabetical">Alphabetical</option>
+                            </select>
+                        </label>
+                    </div>
+                </aside>
             </div>
         </header>
-
-        <section class="controls-shell" aria-label="Dashboard controls">
-            <div class="control-panel">
-                <label class="control-field">
-                    <span>Search</span>
-                    <input id="category-search" type="search" placeholder="Search categories or nominees">
-                </label>
-                <label class="control-field control-field-select">
-                    <span>Sort</span>
-                    <select id="category-sort">
-                        <option value="confidence">Highest confidence</option>
-                        <option value="volume">Highest 24h volume</option>
-                        <option value="tightest">Tightest races</option>
-                        <option value="alphabetical">Alphabetical</option>
-                    </select>
-                </label>
-            </div>
-            <div class="pill-list" id="category-pills"></div>
-        </section>
 
         <section class="grid-section" aria-labelledby="categories-title">
             <div class="section-heading">

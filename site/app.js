@@ -59,7 +59,6 @@ function render() {
     const filteredCategories = getFilteredCategories(payload.categories);
 
     renderSummary(payload);
-    renderCategoryPills(filteredCategories);
     renderResultsSummary(filteredCategories.length, payload.summary.categoryCount);
     renderCategories(filteredCategories);
 }
@@ -104,18 +103,6 @@ function compareCategories(left, right, sortMode) {
 
 function renderSummary(payload) {
     document.querySelector("#hero-updated").textContent = formatDateTime(payload.fetchedAt);
-}
-
-function renderCategoryPills(categories) {
-    const container = document.querySelector("#category-pills");
-
-    container.innerHTML = categories
-        .map((category) => `
-            <a class="pill-link" href="#${createAnchorId(category.category)}">
-                <span>${escapeHtml(category.category)}</span>
-            </a>
-        `)
-        .join("");
 }
 
 function renderResultsSummary(filteredCount, totalCount) {
@@ -223,7 +210,6 @@ function renderNomineeRow(nominee, nomineeIndex) {
 
 function renderError(error) {
     document.querySelector("#hero-updated").textContent = "unavailable";
-    document.querySelector("#category-pills").innerHTML = "";
     document.querySelector("#results-summary").textContent = error.message;
     document.querySelector("#category-grid").innerHTML = `
         <article class="empty-state">

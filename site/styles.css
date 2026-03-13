@@ -55,13 +55,11 @@ body::before {
 }
 
 .hero,
-.controls-shell,
 .grid-section {
     animation: rise-in 560ms ease both;
 }
 
 .hero {
-    display: block;
     padding: 18px 22px;
     border: 1px solid rgba(16, 36, 29, 0.08);
     border-radius: 24px;
@@ -71,6 +69,14 @@ body::before {
     box-shadow: var(--shadow);
     position: relative;
     overflow: hidden;
+}
+
+.hero-layout {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(300px, 390px);
+    gap: 24px;
+    align-items: start;
 }
 
 .hero::after {
@@ -87,6 +93,7 @@ body::before {
 .hero-copy-compact {
     display: grid;
     gap: 8px;
+    min-width: 0;
 }
 
 .hero-topline {
@@ -146,7 +153,6 @@ h1 {
     white-space: nowrap;
 }
 
-.controls-shell,
 .grid-section {
     border: 1px solid rgba(16, 36, 29, 0.08);
     border-radius: var(--radius-lg);
@@ -155,6 +161,23 @@ h1 {
     box-shadow: var(--shadow);
     margin-top: 18px;
     padding: 24px;
+}
+
+.hero-controls {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-controls-shell {
+    display: grid;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid rgba(16, 36, 29, 0.1);
+    border-radius: 20px;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(255, 249, 238, 0.72));
+    box-shadow: 0 16px 32px rgba(16, 36, 29, 0.08);
+    backdrop-filter: blur(12px);
 }
 
 .section-heading {
@@ -167,27 +190,6 @@ h1 {
 
 .section-heading h2 {
     font-size: clamp(1.8rem, 2.4vw, 2.7rem);
-}
-
-.pill-list::-webkit-scrollbar {
-    height: 10px;
-}
-
-.pill-list::-webkit-scrollbar-thumb {
-    background: rgba(16, 36, 29, 0.16);
-    border-radius: var(--radius-sm);
-}
-
-.controls-shell {
-    position: sticky;
-    top: 14px;
-    z-index: 10;
-}
-
-.control-panel {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 260px;
-    gap: 14px;
 }
 
 .control-field {
@@ -207,39 +209,13 @@ h1 {
     background: rgba(255, 255, 255, 0.78);
     color: var(--ink);
     font: inherit;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
 .control-field input:focus,
 .control-field select:focus {
     outline: 2px solid rgba(29, 106, 87, 0.25);
     border-color: rgba(29, 106, 87, 0.4);
-}
-
-.pill-list {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    margin-top: 16px;
-    padding-bottom: 6px;
-}
-
-.pill-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 14px;
-    border: 1px solid rgba(16, 36, 29, 0.08);
-    border-radius: var(--radius-sm);
-    color: var(--ink);
-    background: rgba(255, 255, 255, 0.76);
-    text-decoration: none;
-    white-space: nowrap;
-    transition: transform 160ms ease, border-color 160ms ease;
-}
-
-.pill-link:hover {
-    transform: translateY(-1px);
-    border-color: rgba(207, 90, 42, 0.26);
 }
 
 .category-grid {
@@ -543,6 +519,14 @@ h1 {
 }
 
 @media (max-width: 1120px) {
+    .hero-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-controls {
+        max-width: 420px;
+    }
+
     .section-heading {
         align-items: start;
         flex-direction: column;
@@ -560,13 +544,11 @@ h1 {
     }
 
     .hero,
-    .controls-shell,
     .grid-section {
         padding: 18px;
     }
 
     .category-grid,
-    .control-panel,
     .stat-rail {
         grid-template-columns: 1fr;
     }
@@ -590,5 +572,9 @@ h1 {
     .hero-topline {
         flex-direction: column;
         align-items: start;
+    }
+
+    .hero-controls {
+        max-width: none;
     }
 }

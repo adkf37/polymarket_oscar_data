@@ -1,0 +1,12 @@
+{
+  "name": "polymarket-oscar-data",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "copy-google-form": "node scripts/copy_and_update_google_form.mjs"
+  },
+  "dependencies": {
+    "@google-cloud/local-auth": "^3.0.1",
+    "googleapis": "^171.4.0"
+  }
+}
