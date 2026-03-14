@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Oscars 2026 Ballot</title>
+  <style>
+    :root {
+      --paper: #f6efde;
+      --panel: rgba(255, 252, 246, 0.94);
+      --ink: #1b1611;
+      --muted: #685d4f;
+      --gold: #b58a2d;
+      --line: rgba(27, 22, 17, 0.12);
+      --shadow: 0 10px 24px rgba(41, 30, 9, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    @page {
+      size: letter landscape;
+      margin: 0.25in;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(circle at top left, rgba(181, 138, 45, 0.16), transparent 26%),
+        linear-gradient(135deg, #fbf6ea 0%, #efe3c8 100%);
+      color: var(--ink);
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      font-size: 10px;
+      line-height: 1.25;
+    }
+
+    .sheet {
+      position: relative;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 8px;
+      height: 8in;
+      padding: 0.16in 0.18in 0.14in;
+      border: 1.5px solid rgba(181, 138, 45, 0.45);
+      background: rgba(255, 251, 244, 0.92);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .sheet::before,
+    .sheet::after {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border: 1px solid rgba(174, 138, 57, 0.18);
+      pointer-events: none;
+    }
+
+    .sheet::after {
+      inset: 18px;
+      border-style: dashed;
+      border-color: rgba(24, 21, 18, 0.08);
+    }
+
+    .masthead {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      padding-bottom: 8px;
+      border-bottom: 2px solid rgba(24, 21, 18, 0.14);
+    }
+
+    .kicker {
+      margin: 0 0 4px;
+      color: var(--gold);
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      font-size: 21px;
+      line-height: 0.96;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .dek {
+      max-width: 54ch;
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .meta-panel {
+      align-self: stretch;
+      padding: 8px 10px;
+      border: 1px solid rgba(24, 21, 18, 0.14);
+      background: linear-gradient(180deg, rgba(255, 252, 246, 0.98), rgba(245, 237, 223, 0.95));
+    }
+
+    .meta-panel p {
+      margin: 0 0 6px;
+      color: var(--muted);
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .line-row {
+      display: grid;
+      grid-template-columns: 38px 1fr;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 9px;
+    }
+
+    .line-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .line {
+      border-bottom: 1px solid rgba(24, 21, 18, 0.35);
+      min-height: 11px;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-rows: repeat(5, minmax(0, 1fr));
+      gap: 6px;
+      min-height: 0;
+    }
+
+    .category-card {
+      position: relative;
+      min-height: 0;
+      padding: 8px 8px 7px 27px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .category-card-featured {
+      grid-column: span 2;
+    }
+
+    .category-index {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      color: rgba(174, 138, 57, 0.95);
+      font-family: "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    h2 {
+      margin: 0 0 5px;
+      font-family: "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      font-size: 10.5px;
+      line-height: 1.1;
+      letter-spacing: 0.01em;
+    }
+
+    .nominee-list {
+      display: grid;
+      gap: 3px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nominee-list-split {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 8px;
+    }
+
+    .nominee {
+      display: grid;
+      grid-template-columns: 9px 1fr;
+      gap: 6px;
+      align-items: start;
+    }
+
+    .nominee-mark {
+      width: 9px;
+      height: 9px;
+      border: 1.25px solid rgba(24, 21, 18, 0.78);
+      border-radius: 2px;
+      margin-top: 1px;
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .nominee-name {
+      font-size: 7.6px;
+      line-height: 1.18;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(24, 21, 18, 0.14);
+      color: var(--muted);
+      font-size: 8px;
+    }
+
+    @media print {
+      body {
+        background: none;
+      }
+
+      .sheet {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="masthead">
+      <div>
+        <p class="kicker">Academy Awards Forecast Ballot</p>
+        <h1>Oscars 2026 Ballot</h1>
+        <p class="dek">Select one nominee per category.</p>
+      </div>
+      <aside class="meta-panel" aria-label="Ballot details">
+        <p>Ballot info</p>
+        <div class="line-row"><span>Name</span><span class="line"></span></div>
+        <div class="line-row"><span>Date</span><span class="line"></span></div>
+       </aside>
+    </header>
+
+    <section class="category-grid" aria-label="Oscar categories">
+      
+        <section class="category-card">
+          <div class="category-index">01</div>
+          <h2>Best Actor</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Michael B. Jordan</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Timothée Chalamet</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Leonardo DiCaprio</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Wagner Moura</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Ethan Hawke</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">02</div>
+          <h2>Best Actress</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Jessie Buckley</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Rose Byrne</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Emma Stone</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Renate Reinsve</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Kate Hudson</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">03</div>
+          <h2>Best Adapted Screenplay</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">One Battle After Another</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Hamnet</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Frankenstein</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Train Dreams</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Bugonia</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">04</div>
+          <h2>Best Animated Feature Film</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">KPop Demon Hunters</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Zootopia 2</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Arco</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Little Amelie or the Character of Rain</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Elio</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">05</div>
+          <h2>Best Animated Short Film</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Butterfly</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">The Girl Who Cried Pearls</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Retirement Plan</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Forevergreen</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">The Three Sisters</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">06</div>
+          <h2>Best Casting</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Sinners</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">One Battle After Another</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Marty Supreme</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">The Secret Agent</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Hamnet</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">07</div>
+          <h2>Best Cinematography</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">One Battle After Another</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Sinners</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Train Dreams</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Marty Supreme</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Frankenstein</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">08</div>
+          <h2>Best Costume Design</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Frankenstein</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Sinners</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Hamnet</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Marty Supreme</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Avatar: Fire and Ash</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">09</div>
+          <h2>Best Director</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Paul Thomas Anderson</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Ryan Coogler</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Joachim Trier</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Chloé Zhao</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Josh Safdie</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">10</div>
+          <h2>Best Documentary Feature Film</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">The Perfect Neighbor</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Mr. Nobody Against Putin</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Come See Me in the Good Light</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">The Alabama Solution</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Cutting Through Rocks</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">11</div>
+          <h2>Best Documentary Short Film</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">All the Empty Rooms</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Armed Only with a Camera: The Life and Death of Brent Renaud</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">The Devil Is Busy</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Perfectly a Strangeness</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Children no More: Were and Are Gone</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">12</div>
+          <h2>Best Film Editing</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">One Battle After Another</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">F1: The Movie</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Sinners</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Marty Supreme</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Sentimental Value</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">13</div>
+          <h2>Best International Feature Film</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Sentimental Value</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">The Secret Agent</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">It Was Just An Accident</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">The Voice of Hind Rajab</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Sirāt</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">14</div>
+          <h2>Best Live Action Short Film</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Two People Exchanging Saliva</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">The Singers</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">A Friend of Dorothy</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Jane Austen's Period Drama</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Butcher's Stain</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">15</div>
+          <h2>Best Makeup and Hairstyling</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Frankenstein</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Sinners</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Kokuho</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">The Ugly Stepsister</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">The Smashing Machine</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">16</div>
+          <h2>Best Original Score</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Sinners</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">One Battle After Another</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Hamnet</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Frankenstein</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Bugonia</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">17</div>
+          <h2>Best Original Screenplay</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Sinners</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Marty Supreme</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Blue Moon</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Sentimental Value</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">It Was Just an Accident</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">18</div>
+          <h2>Best Original Song</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Golden - KPop Demon Hunters</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">I Lied to You - Sinners</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Dear Me - Diane Warren: Relentless</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Sweet Dreams of Joy - Viva Verdi</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Train Dreams - Train Dreams</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card category-card-featured">
+          <div class="category-index">19</div>
+          <h2>Best Picture</h2>
+          <ul class="nominee-list nominee-list-split">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">One Battle After Another</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Sinners</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Hamnet</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Marty Supreme</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Sentimental Value</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Train Dreams</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">The Secret Agent</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Frankenstein</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Bugonia</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">F1</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">20</div>
+          <h2>Best Production Design</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Frankenstein</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Sinners</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Hamnet</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">One Battle After Another</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Marty Supreme</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">21</div>
+          <h2>Best Sound</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">F1</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Sinners</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Sirāt</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Frankenstein</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">One Battle After Another</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">22</div>
+          <h2>Best Supporting Actor</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Sean Penn</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Stellan Skarsgård</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Delroy Lindo</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Jacob Elordi</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Benicio Del Toro</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">23</div>
+          <h2>Best Supporting Actress</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Amy Madigan</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Teyana Taylor</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Wunmi Mosaku</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Inga Ibsdotter Lilleaas</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Elle Fanning</span>
+            </li>
+          </ul>
+        </section>
+        <section class="category-card">
+          <div class="category-index">24</div>
+          <h2>Best Visual Effects</h2>
+          <ul class="nominee-list">
+            
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Avatar: Fire and Ash</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Sinners</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">F1</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">Jurassic World Rebirth</span>
+            </li>
+            <li class="nominee">
+              <span class="nominee-mark" aria-hidden="true"></span>
+              <span class="nominee-name">The Lost Bus</span>
+            </li>
+          </ul>
+        </section>
+    </section>
+
+    <footer class="footer">
+     <p style="font-size: 1.8em;"> Tiebreaker: How many people will appear in the In Memoriam montage?</p>
+    </footer>
+  </main>
+</body>
+</html>

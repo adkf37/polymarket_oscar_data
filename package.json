@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "copy-google-form": "node scripts/copy_and_update_google_form.mjs"
+    "copy-google-form": "node scripts/copy_and_update_google_form.mjs",
+    "generate-ballot-pdf": "node scripts/generate_ballot_pdf.mjs"
   },
   "dependencies": {
     "@google-cloud/local-auth": "^3.0.1",
